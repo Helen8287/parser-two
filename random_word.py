@@ -8,17 +8,21 @@ def get_english_words():
 
     try:
         response = requests.get(url)
-        print(response.text)
 
         # Создаём объект Soup
         soup = BeautifulSoup(response.content, "html.parser")
-        english_words = soup.find_all('div', id='random_word')
-        word_definition = soup.find_all('div', id='random_word_definition')
+        # Получаем слово. text.strip удаляет все пробелы из результата
+        english_words = soup.find('div', id='random_word').text.strip()
+        # Получаем описание слова
+        word_definition = soup.find('div', id='random_word_definition').text.strip()
+
+        # Чтобы программа возвращала словарь
 
         return {
             "english_word" : english_words,
             "word_definition" : word_definition
         }
+    # Функция, которая сообщит об ошибке, но не остановит программу
     except:
         print("Произошла ошибка")
 
@@ -38,12 +42,12 @@ def word_game():
         user = input("Что это за слово?")
 
         if user == word:
-            print("Все хорошо!")
+            print("Ответ верный!")
         else:
             print(f'Ответ неверный, было загадано это слово - {word}')
 
         # Создаём возможность закончить игру
-        play_again = input("Хотите сыграть еще раз? y\n")
+        play_again = input("Хотите сыграть еще раз? y/n")
         if play_again != "y":
             print("Спасибо за игру!")
             break
